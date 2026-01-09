@@ -14,13 +14,13 @@ pipeline {
       steps{
           script {
               dockerImage = docker.build(registry)
-              dockerImage.tag("${env.BUILD_NUMBER}")
+              dockerImage.tag("${env.GIT_BRANCH}-${env.BUILD_NUMBER}")
           }
         }
     }
     stage("Scan Image") {
       steps {
-        grypeScan scanDest: "docker:${registry}:${BUILD_NUMBER}", repName: 'scanResult.txt', autoInstall:true
+        grypeScan scanDest: "docker:${registry}:${GIT_BRANCH}-${BUILD_NUMBER}", repName: 'scanResult.txt', autoInstall:true
       }
     }
   }
