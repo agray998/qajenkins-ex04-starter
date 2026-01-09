@@ -14,7 +14,7 @@ pipeline {
       steps{
           script {
               dockerImage = docker.build(registry)
-              dockerImage.tag("${env.BUILD_NUMBER}")
+              dockerImage.tag("${env.GIT_BRANCH}-${env.BUILD_NUMBER}")
           }
         }
     }
