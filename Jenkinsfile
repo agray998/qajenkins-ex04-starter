@@ -5,14 +5,22 @@ pipeline {
     dockerImage = ""
   }
   stages {
-    stage("Docker Build") {
+    stage("Validate With Terrascan") {
       steps {
-        sh "echo 'Docker Build...'"
+        sh "terrascan scan -i docker"
       }
+    }
+    stage ('Docker Build'){
+      steps{
+          script {
+              dockerImage = docker.build(registry)
+              dockerImage.tag("${env.BUILD_NUMBER}")
+          }
+        }
     }
     stage("Scan Image") {
       steps {
-        sh "echo 'Scan Image...'"
+        grypeScan scanDest: "docker:${registry}:${BUILD_NUMBER}", repName: 'scanResult.txt', autoInstall:true
       }
     }
   }
